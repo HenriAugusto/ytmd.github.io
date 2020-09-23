@@ -27,7 +27,7 @@ body {
 }
 
 #timeline {
-	width: 500px;
+	width: 100%;
 	height: 60px;
 	border-color: red;
 	background-color: #0e0e0e;
@@ -56,12 +56,14 @@ body {
 }
 
 #main_input {
-	width: 640px;
-	height: 666px
+	/*width: 640px;*/
+	/*height: 666px*/
+	width: 100%;
+	height: 100%;
 }
 
 #playback_controls{
-	width: 640px;
+	width: 100%;
 }
 
 .flex-container {

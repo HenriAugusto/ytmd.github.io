@@ -13,7 +13,7 @@ function setupIFrameAPI(){
 //  after the API code downloads.
 function onYouTubeIframeAPIReady(){
   PLAYER = new YT.Player('ytplayer', {
-    height: '390',
+    height: '360',
     width: '640',
     // videoId: 'EkwqPJZe8ms',
     events: {
@@ -25,7 +25,27 @@ function onYouTubeIframeAPIReady(){
 
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
+  resizeYoutubePlayer();
+  $("#main_input")[0].style.height = 0.8*window.screen.height+"px";
   init();
+}
+
+// THOSE SHOULD GO IN A LAYOUT CLASS
+// THAT TRIGGERS WHENEVER THE PHONE CHANGES ORIENTATION
+function resizeYoutubePlayer(){
+  var w = window.screen.width;
+  var h = window.screen.height;
+  var landscape = w > h ? true : false;
+  // those dimensions are for the ideal proportion of the player
+  // 640 x 360 is 16:9
+  var prop_w = 640;
+  var prop_h = 360;
+  if(landscape){
+    PLAYER.setSize(window.screen.width*prop_h/prop_w, window.screen.height);
+  } else {
+    PLAYER.setSize(window.screen.width, window.screen.height*prop_h/prop_w);
+  }
+
 }
 
 onPlayerReady.init = false;

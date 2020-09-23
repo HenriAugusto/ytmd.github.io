@@ -5,13 +5,41 @@ function init(){
 	setEventListeners();
 	parseURLQuery();
 	parseMarkdownData();
-	setTimeout( () => Timeline.createTimeLine(), 2000); //WORKAROUND
 }
 
 function setEventListeners(){
 	document.getElementById("main_input").addEventListener("input", formUpdate);
 	document.getElementById("video_input").addEventListener("input", videoInput);
 	window.onresize = () => Timeline.createTimeLine();
+
+	//allow the Tab key to create a tab char
+	$("#main_input").on('keydown', function(e) {
+	  var keyCode = e.keyCode || e.which;
+
+	  if (keyCode == 9) {
+	    e.preventDefault();
+	    var start = this.selectionStart;
+	    var end = this.selectionEnd;
+
+	    // set textarea value to: text before caret + tab + text after caret
+	    $(this).val($(this).val().substring(0, start)
+	                + "\t"
+	                + $(this).val().substring(end));
+
+	    // put caret at right position again
+	    this.selectionStart =
+	    this.selectionEnd = start + 1;
+	  }
+	});
+
+	$("#timeline")[0].addEventListener("mouseover", function(e){
+		var preview = document.createElement("div");
+        preview.setAttribute("class", "timelinePlayhead");
+
+        preview.style.position = "absolute";
+        preview.style.left = e.offsetX+"px";
+        preview.style.top = (Timeline.top+(Timeline.max_depth+1)*Timeline.tag_h)+"px";
+    });
 }
 
 // called whenever the user updates the main form
@@ -40,7 +68,12 @@ function parseURLQuery(){
 
 	var v = param.get("v");
 	if( v != "" && v != null ){
-		PLAYER.loadVideoById({'videoId': v});
+		PLAYER.cueVideoById({'videoId': v});
+		//so the FLV gets requested immediately
+		{
+			PLAYER.seekTo(0);
+			PLAYER.pauseVideo();
+		}
 		VIDEO_ID = v;
 	}
 
