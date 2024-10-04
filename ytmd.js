@@ -5,12 +5,15 @@ function init(){
 	setEventListeners();
 	parseURLQuery();
 	parseMarkdownData();
+	// redraw_timeline();
+	setTimeout( () => Timeline.createTimeLine(), 750); //WORKAROUND
 }
 
 function setEventListeners(){
 	document.getElementById("main_input").addEventListener("input", formUpdate);
 	document.getElementById("video_input").addEventListener("input", videoInput);
 	window.onresize = () => Timeline.createTimeLine();
+	// window.onresize = () => redraw_timeline()
 
 	//allow the Tab key to create a tab char
 	$("#main_input").on('keydown', function(e) {
@@ -46,6 +49,7 @@ function setEventListeners(){
 function formUpdate(){
 	updateURL();
 	parseMarkdownData();
+	redraw_timeline();
 }
 
 function updateURL(){
@@ -161,4 +165,13 @@ function videoInput(){
 	PLAYER.loadVideoById({'videoId': id});
 	VIDEO_ID = id;
 	updateURL();
+}
+
+/**
+ * When we draw the timeline, since sizes are relative, sometimes we must trigger
+ * some kind of event to redraw it at correct sizes.
+ */
+function redraw_timeline(){
+	console.log("Redrawing");
+	window.dispatchEvent(new Event('resize'));
 }
